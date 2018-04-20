@@ -14,7 +14,13 @@ import Time exposing (Time)
 type alias Entity =
     { x : Float
     , y : Float
+    , direction : Direction
     }
+
+
+type Direction
+    = Left
+    | Right
 
 
 type alias Model =
@@ -34,7 +40,7 @@ init : Flags -> ( Model, Cmd Msg )
 init flags =
     ( { charactersPath = flags.charactersPath
       , elapsedTime = 0
-      , mario = { x = 0, y = 0 }
+      , mario = { x = 0, y = 0, direction = Left }
       , keyPressed = "Nothing pressed"
       }
     , Cmd.none
@@ -72,11 +78,6 @@ update msg model =
 ---- VIEW ----
 
 
-type MarioSize
-    = Small
-    | Large
-
-
 view : Model -> Html Msg
 view model =
     let
@@ -104,23 +105,37 @@ moveMario dt keyPressed mario =
             "39"
     in
         if keyPressed == leftArrow then
-            { mario | x = mario.x - dt / 10 }
+            { mario | x = mario.x - dt / 10, direction = Left }
         else if keyPressed == rightArrow then
-            { mario | x = mario.x + dt / 10 }
+            { mario | x = mario.x + dt / 10, direction = Right }
         else
             mario
 
 
 drawMario : Entity -> String -> Svg Msg
-drawMario entity spritesPath =
+drawMario mario spritesPath =
     let
         spriteWidth =
             16
 
         spriteHeight =
             16
+
+        marioLeftSprite =
+            "222 44 16 16"
+
+        marioRightSprite =
+            "276 44 16 16"
+
+        spritePosition =
+            case mario.direction of
+                Left ->
+                    marioLeftSprite
+
+                Right ->
+                    marioRightSprite
     in
-        svg [ x (toString entity.x), y (toString entity.y), width "16px", height "16px", viewBox "276 44 16 16", version "1.1" ]
+        svg [ x (toString mario.x), y (toString mario.y), width "16px", height "16px", viewBox spritePosition, version "1.1" ]
             [ image [ x "0px", y "0px", width "513px", height "401px", xlinkHref spritesPath ] []
             ]
 
