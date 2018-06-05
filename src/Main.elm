@@ -136,7 +136,7 @@ drawMario mario spritesPath =
                     marioRightSprite
     in
         svg [ x (toString mario.x), y (toString mario.y), width "16px", height "16px", viewBox spritePosition, version "1.1" ]
-            [ image [ x "0px", y "0px", width "513px", height "401px", xlinkHref spritesPath ] []
+            [ image [ x "0px", y "0px", width "513px", height "401px", xlinkHref spritesPath, imageRendering "pixelated" ] []
             ]
 
 
